@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RadiusStyle {
+  xs
+  sm
+  md
+  lg
+  xl
+}
+
+enum BgStyle {
+  red
+}
+
+enum BorderStyle {
+  normal
+  shadowed
+  bordered
+}
+
+model User {
+  id           String  @id @default(cuid())
+  email        String
+  fullName     String
+  profileImage String?
+  Form         Form[]
+}
+
+model Style {
+  id      String      @id @default(uuid())
+  radius  RadiusStyle
+  bgColor BgStyle
+  border  BorderStyle
+
+  Form Form[]
+}
+
+model Form {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  isPublished Boolean  @default(false)
+  isAuth      Boolean  @default(false)
+  content     String   @default("[]")
+  submissions Int      @default(0)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  styleId String
+  style   Style  @relation(fields: [styleId], references: [id])
+
+  createdBy String
+  user      User   @relation(fields: [createdBy], references: [id])
+}
