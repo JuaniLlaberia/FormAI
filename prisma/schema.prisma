@@ -25,6 +25,11 @@ enum BorderStyle {
   bordered
 }
 
+enum ConfigureType {
+  scratch
+  templates
+}
+
 model User {
   id           String  @id @default(cuid())
   email        String
@@ -54,8 +59,11 @@ model Form {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  styleId String
-  style   Style  @relation(fields: [styleId], references: [id])
+  needsConfigure Boolean       @default(true)
+  configureType  ConfigureType
+
+  styleId String?
+  style   Style?  @relation(fields: [styleId], references: [id])
 
   createdBy String
   user      User   @relation(fields: [createdBy], references: [id])
