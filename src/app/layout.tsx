@@ -1,7 +1,11 @@
-import { Inter } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
+import { Inter } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
 
 import './globals.css';
+import Provider from '@/components/Provider';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -22,7 +26,20 @@ export default function RootLayout({
     <html lang='en'>
       <body className={inter.className}>
         <NextTopLoader />
-        {children}
+        <Navbar />
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className='flex flex-col min-h-[calc(100vh-3.5rem-1px)] bg-background'>
+            <div className='flex-1 flex flex-col h-full'>
+              <Provider>{children}</Provider>
+            </div>
+          </main>
+          <Footer />
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>
