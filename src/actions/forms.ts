@@ -78,6 +78,7 @@ export const updateForm = async ({
   if (!user) return redirect('/');
 
   await db.form.update({ where: { id: formId }, data: formData });
+  revalidatePath('/dashboard/form/[formId]/edit');
 };
 
 export const generateFormWithAi = async ({
@@ -93,7 +94,7 @@ export const generateFormWithAi = async ({
   if (!user) return redirect('/');
 
   //Generate field JSON using Gemini API
-  const fullPromp = `Create inputs for a form, description: ${prompt}, On the basis of description please give form in json format with form fields (including name, placeholder and label). In Json format, nothing else.`;
+  const fullPromp = `Create inputs for a form, description: ${prompt}, On the basis of description please give form in json format with form fields (including label, placeholder, helperText (extra indications for that inpu), required set to false and also include the type of the input. Being, text: TextField, options: OptionsField, etc... And the format should be like this: {id, type, extraAttributes: {label, placeholder, required, helperText}}}). In Json format, nothing else.`;
 
   const result = await model.generateContent(fullPromp);
   const response = await result.response;
