@@ -94,9 +94,17 @@ const DashboardPage = async ({
                 </DropdownMenu>
                 <div className='flex mx-1 my-3'>
                   {form.isPublished ? (
-                    <Badge decorated color='green' text='Published' />
+                    <Badge
+                      decorated
+                      color='green'
+                      text='Published'
+                    />
                   ) : (
-                    <Badge decorated color='blue' text='Draft' />
+                    <Badge
+                      decorated
+                      color='blue'
+                      text='Draft'
+                    />
                   )}
                 </div>
                 <div className='flex items-center justify-end'>
@@ -112,7 +120,7 @@ const DashboardPage = async ({
             <h3 className='text-muted-foreground mb-2.5'>
               You have no forms yet
             </h3>
-            {searchParams.search.length === 0 && (
+            {searchParams.search?.length === 0 && (
               <Link
                 href=''
                 className={buttonVariants({ variant: 'ghost', size: 'sm' })}
