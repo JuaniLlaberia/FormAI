@@ -14,6 +14,7 @@ import {
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'SubTitleField';
 
@@ -114,6 +115,7 @@ function PropertiesComponent({
           UI component to display a subtitle to users.
         </p>
       </div>
+      <RemoveFieldBtn elementId={element.id} />
     </form>
   );
 }

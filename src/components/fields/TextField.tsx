@@ -1,6 +1,6 @@
 'use client';
 
-import { Type } from 'lucide-react';
+import { Trash, Type } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +15,8 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
 import { Switch } from '../ui/switch';
+import { Button } from '../ui/button';
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'TextField';
 
@@ -174,6 +176,7 @@ function PropertiesComponent({
           <Switch />
         </div>
       </div>
+      <RemoveFieldBtn elementId={element.id} />
     </form>
   );
 }

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 import {
   ElementsType,
   FormElement,
@@ -158,6 +159,7 @@ function PropertiesComponent({
           <Switch />
         </div>
       </div>
+      <RemoveFieldBtn elementId={element.id} />
     </form>
   );
 }

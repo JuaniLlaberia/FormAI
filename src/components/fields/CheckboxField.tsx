@@ -16,6 +16,7 @@ import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
 import { Switch } from '../ui/switch';
 import { Checkbox } from '../ui/checkbox';
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'CheckboxField';
 
@@ -156,6 +157,7 @@ function PropertiesComponent({
           <Switch />
         </div>
       </div>
+      <RemoveFieldBtn elementId={element.id} />
     </form>
   );
 }

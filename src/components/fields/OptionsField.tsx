@@ -16,6 +16,7 @@ import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
 import { Switch } from '../ui/switch';
 import { Select, SelectTrigger, SelectValue } from '../ui/select';
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'OptionsField';
 
@@ -196,6 +197,7 @@ function PropertiesComponent({
           <Switch />
         </div>
       </div>
+      <RemoveFieldBtn elementId={element.id} />
     </form>
   );
 }

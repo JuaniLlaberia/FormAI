@@ -14,6 +14,7 @@ import {
 import { Label } from '../ui/label';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
 import { Textarea } from '../ui/textarea';
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'ParagraphField';
 
@@ -114,6 +115,7 @@ function PropertiesComponent({
           Add a description/paragraph.
         </p>
       </div>
+      <RemoveFieldBtn elementId={element.id} />
     </form>
   );
 }
