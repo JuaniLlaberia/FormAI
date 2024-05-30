@@ -103,8 +103,22 @@ export const generateFormWithAi = async ({
 
   if (!user) return redirect('/');
 
+  const jsonSchema = {
+    formFields: [
+      {
+        id: '',
+        type: '',
+        extraAttibutes: {
+          label: '',
+          placeholder: '',
+          required: '',
+          helperText: '',
+        },
+      },
+    ],
+  };
   //Generate field JSON using Gemini API
-  const fullPromp = `Create inputs for a form, description: ${prompt}, On the basis of description please give form in json format with form fields (including label, placeholder, helperText (extra indications for that inpu), required set to false and also include the type of the input. Being, text: TextField, options: OptionsField, etc... And the format should be like this: {id, type, extraAttributes: {label, placeholder, required, helperText}}}). In Json format, nothing else.`;
+  const fullPromp = `Create inputs for a form, description: ${prompt}, On the basis of description please give form in json format with form fields (including label, placeholder, helperText (extra indications for that inpu), required set to false and also include the type of the input. Being, text: TextField, options: OptionsField, etc... And the format should be like this: {id, type, extraAttributes: {label, placeholder, required, helperText}}}). Follow this JSON schema <JSONSchema>${jsonSchema}.`;
 
   const result = await model.generateContent(fullPromp);
   const response = await result.response;
