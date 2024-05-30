@@ -25,8 +25,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useFormContext } from './FormContext';
 import { updateForm as updateFormAction } from '@/actions/forms';
+import { useToast } from '@/components/ui/use-toast';
 
 const FormEditor = ({ form }: { form: FormType }) => {
+  const { toast } = useToast();
   const { setElements, setSelectedElement, elements } = useFormContext();
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -46,12 +48,26 @@ const FormEditor = ({ form }: { form: FormType }) => {
   const { mutate: updateForm } = useMutation({
     mutationKey: ['update-form'],
     mutationFn: updateFormAction,
+    onSuccess: () =>
+      toast({
+        title: 'Form updated successfully',
+        description: 'The form was updated and save.',
+      }),
+    onError: () =>
+      toast({
+        title: 'Something went wrong',
+        description:
+          'We failed to update and save your changes. Please try again.',
+        variant: 'destructive',
+      }),
   });
 
   useEffect(() => {
     if (isReady) return;
     const elements = JSON.parse(form.content);
-    setElements(elements.inputs || elements);
+    setElements(
+      elements.form || elements.input || elements.formFields || elements
+    );
     setSelectedElement(null);
     const readyTimeout = setTimeout(() => setIsReady(true), 500);
     return () => clearTimeout(readyTimeout);
