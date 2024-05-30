@@ -21,7 +21,7 @@ const Searchbar = ({ search = '' }: { search: string }) => {
       <Search className='absolute top-1/2 -translate-y-1/2 left-3 size-4 text-muted-foreground' />
       <Input
         placeholder='Search forms by name'
-        className='pl-8'
+        className='pl-8 pr-11 md:pr-1'
         defaultValue={search}
         onChange={e => setSearch(e.target.value)}
       />
