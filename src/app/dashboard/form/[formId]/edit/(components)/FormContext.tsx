@@ -39,6 +39,7 @@ const FormContextProvider = ({ children }: { children: ReactNode }) => {
 
   const removeElement = (id: string) => {
     setElements(prev => prev.filter(element => element.id !== id));
+    setSelectedElement(null);
   };
 
   const updateElement = (id: string, element: FormElementInstance) => {
