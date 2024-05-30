@@ -138,7 +138,8 @@ export const deleteForm = async ({ formId }: { formId: string }) => {
   if (!user) return redirect('/');
 
   const form = await db.form.findUnique({ where: { id: formId } });
-  if (form?.createdBy !== user.id) return redirect('/');
+  if (form?.createdBy !== user.id)
+    throw new Error('This form does not belong to you');
 
   await db.form.delete({ where: { id: formId } });
 

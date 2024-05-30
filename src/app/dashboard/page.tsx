@@ -11,6 +11,7 @@ import {
 import Badge from '@/components/ui/badge';
 import Filters from './(components)/Filters';
 import Searchbar from './(components)/Searchbar';
+import DeleteFormModal from './(components)/DeleteFormModal';
 import { getForms } from '@/actions/forms';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -21,6 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const DashboardPage = async ({
   searchParams,
@@ -85,30 +87,43 @@ const DashboardPage = async ({
                 <p className='text-sm text-muted-foreground line-clamp-2'>
                   {form.description}
                 </p>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className='absolute top-4 right-3.5 p-1.5 text-muted-foreground rounded-md hover:bg-muted hover:text-primary transition-all'>
-                    <Ellipsis className='size-4' />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {form.isPublished && (
-                      <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/form/${form.id}/information`}>
-                          <FileText className='size-3.5 mr-1.5' /> Information
-                        </Link>
+                <Dialog>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className='absolute top-4 right-3.5 p-1.5 text-muted-foreground rounded-md hover:bg-muted hover:text-primary transition-all'>
+                      <Ellipsis className='size-4' />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {form.isPublished && (
+                        <DropdownMenuItem asChild>
+                          <Link href={`/dashboard/form/${form.id}/information`}>
+                            <FileText className='size-3.5 mr-1.5' /> Information
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                      {!form.isPublished && (
+                        <DropdownMenuItem asChild>
+                          <Link href={`/dashboard/form/${form.id}/edit`}>
+                            <Pencil className='size-3.5 mr-1.5' /> Edit
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem
+                        asChild
+                        className='text-red-400 hover:text-red-500 focus:text-red-500'
+                      >
+                        <DialogTrigger className='w-full'>
+                          <Trash className='size-3.5 mr-1.5' /> Remove
+                        </DialogTrigger>
                       </DropdownMenuItem>
-                    )}
-                    {!form.isPublished && (
-                      <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/form/${form.id}/edit`}>
-                          <Pencil className='size-3.5 mr-1.5' /> Edit
-                        </Link>
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuItem className='text-red-400 hover:text-red-500 focus:text-red-500'>
-                      <Trash className='size-3.5 mr-1.5' /> Remove
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <DialogContent>
+                    <DeleteFormModal
+                      formId={form.id}
+                      formName={form.name}
+                    />
+                  </DialogContent>
+                </Dialog>
                 <div className='flex mx-1 my-3'>
                   {form.isPublished ? (
                     <Badge
