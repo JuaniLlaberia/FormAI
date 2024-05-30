@@ -133,13 +133,12 @@ const DashboardPage = async ({
             </Link>
           ))
         ) : (
-          <div className='text-center py-8 text-sm md:text-base'>
-            <h3 className='text-muted-foreground mb-2.5'>
-              You have no forms yet
-            </h3>
-            {searchParams.search?.length === 0 && (
+          <div className='col-span-full text-center py-8 text-sm md:text-base'>
+            <h3 className='text-muted-foreground mb-2.5'>No forms found</h3>
+            {(searchParams.search?.length === 0 ||
+              searchParams.search === undefined) && (
               <Link
-                href=''
+                href='/dashboard/form/new'
                 className={buttonVariants({ variant: 'ghost', size: 'sm' })}
               >
                 Start now
