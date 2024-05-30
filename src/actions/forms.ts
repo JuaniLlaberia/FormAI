@@ -3,14 +3,22 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import { ConfigureType, Form } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 import { db } from '@/db';
 import { model } from '@/gemini';
-import { revalidatePath } from 'next/cache';
 
 type PartialForm = Partial<Form>;
 
-export const getForms = async ({ search }: { search: string }) => {
+export const getForms = async ({
+  search,
+  filter,
+  sort,
+}: {
+  search: string;
+  filter: 'all' | 'draft' | 'published';
+  sort: 'activity' | 'name';
+}) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -20,8 +28,10 @@ export const getForms = async ({ search }: { search: string }) => {
     where: {
       createdBy: user.id,
       name: { contains: search, mode: 'insensitive' },
+      isPublished:
+        filter === 'draft' ? false : filter === 'published' ? true : undefined,
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: sort === 'activity' ? { updatedAt: 'desc' } : { name: 'desc' },
     select: {
       id: true,
       name: true,
@@ -103,7 +113,7 @@ export const generateFormWithAi = async ({
   //Store generated content in DB
   await db.form.update({
     where: { id: formId },
-    data: { content: json, needsConfigure: false },
+    data: { content: json, needsConfigure: false, updatedAt: new Date() },
   });
 };
 

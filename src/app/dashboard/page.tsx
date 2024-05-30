@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 import Badge from '@/components/ui/badge';
+import Filters from './(components)/Filters';
 import Searchbar from './(components)/Searchbar';
 import { getForms } from '@/actions/forms';
 import { buttonVariants } from '@/components/ui/button';
@@ -24,15 +25,29 @@ import { cn } from '@/lib/utils';
 const DashboardPage = async ({
   searchParams,
 }: {
-  searchParams: { search: string };
+  searchParams: {
+    search: string;
+    filter: 'all' | 'draft' | 'published';
+    sortBy: 'activity' | 'name';
+  };
 }) => {
-  const forms = await getForms({ search: searchParams.search });
+  const forms = await getForms({
+    search: searchParams.search,
+    filter: searchParams.filter || 'all',
+    sort: searchParams.sortBy || 'activity',
+  });
 
   return (
     <div className='flex-1'>
       <header className='mb-4'>
         <div className='flex gap-3'>
-          <Searchbar search={searchParams.search} />
+          <div className='flex gap-3 relative w-full'>
+            <Searchbar search={searchParams.search} />
+            <Filters
+              filter={searchParams.filter}
+              sortBy={searchParams.sortBy}
+            />
+          </div>
           <Link
             href='/dashboard/form/new'
             className={cn(buttonVariants({}), 'hidden md:flex')}
@@ -50,7 +65,9 @@ const DashboardPage = async ({
           </Link>
         </div>
       </header>
-      <h1 className='mb-2 text-base lg:text-lg font-medium'>Your forms</h1>
+      <h1 className='mb-2 text-sm lg:text-base xl:text-lg font-medium'>
+        Your forms
+      </h1>
       <ul className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5'>
         {forms.length > 0 ? (
           forms.map(form => (
