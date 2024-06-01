@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { ArrowRight, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import { Cabin } from 'next/font/google';
 
 import { buttonVariants } from './ui/button';
 import { cn } from '@/lib/utils';
@@ -13,14 +14,24 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
+const cabin = Cabin({ subsets: ['latin'] });
+
 const Navbar = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
   return (
-    <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-border bg-background-2 backdrop-blur-lg transition-all'>
-      <div className='flex h-full items-center justify-between p-3'>
-        <Link href='/'>LOGO</Link>
+    <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-border backdrop-blur-lg transition-all px-4 md:px-8 lg:px-16 xl:px-32'>
+      <div className='flex h-full items-center justify-between'>
+        <Link
+          href='/'
+          className={cn(
+            cabin.className,
+            'flex items-center gap-2 font-semibold tracking-wide text-lg'
+          )}
+        >
+          FormAI
+        </Link>
         <div className='flex gap-3'>
           {user ? (
             <>
