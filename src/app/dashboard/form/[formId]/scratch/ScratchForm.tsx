@@ -93,7 +93,7 @@ const ScratchForm = ({ formId }: { formId: string }) => {
         >
           {isPending ? <Loader className='size-4 mr-1.5 animate-spin' /> : null}
           Generate with Ai
-          <Sparkles className='size-3.5 ml-1.5 fill-primary' />
+          <Sparkles className='size-3.5 ml-1.5 fill-secondary' />
         </Button>
       </div>
     </div>
