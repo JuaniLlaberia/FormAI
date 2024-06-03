@@ -156,6 +156,8 @@ export const deleteForm = async ({ formId }: { formId: string }) => {
   if (form?.createdBy !== user.id)
     throw new Error('This form does not belong to you');
 
+  await db.submission.deleteMany({ where: { formId } });
+
   await db.form.delete({ where: { id: formId } });
 
   revalidatePath('/dashboard');
