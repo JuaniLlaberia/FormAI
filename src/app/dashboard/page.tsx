@@ -73,17 +73,19 @@ const DashboardPage = async ({
       <ul className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5'>
         {forms.length > 0 ? (
           forms.map(form => (
-            <Link
+            <li
               key={form.id}
-              href={`/dashboard/form/${form.id}/${
-                form.isPublished ? 'information' : 'edit'
-              }`}
               className='bg-background-2 hover:bg-muted/45 hover:border-primary/50 p-4 px-5 border border-border relative rounded-md shadow-sm transition-colors'
             >
               <li>
-                <h2 className='text-base font-semibold tracking-tight'>
+                <Link
+                  href={`/dashboard/form/${form.id}/${
+                    form.isPublished ? 'information' : 'edit'
+                  }`}
+                  className='text-base font-semibold tracking-tight'
+                >
                   {form.name}
-                </h2>
+                </Link>
                 <p className='text-sm text-muted-foreground line-clamp-2'>
                   {form.description}
                 </p>
@@ -145,7 +147,7 @@ const DashboardPage = async ({
                   </p>
                 </div>
               </li>
-            </Link>
+            </li>
           ))
         ) : (
           <div className='col-span-full text-center py-8 text-sm md:text-base'>
