@@ -131,6 +131,21 @@ export const generateFormWithAi = async ({
   });
 };
 
+export const publishForm = async ({ formId }: { formId: string }) => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) return redirect('/');
+
+  return await db.form.update({
+    where: { id: formId },
+    data: {
+      isPublished: true,
+      updatedAt: new Date(),
+    },
+  });
+};
+
 export const deleteForm = async ({ formId }: { formId: string }) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -144,4 +159,11 @@ export const deleteForm = async ({ formId }: { formId: string }) => {
   await db.form.delete({ where: { id: formId } });
 
   revalidatePath('/dashboard');
+};
+
+export const getFormContent = async ({ formId }: { formId: string }) => {
+  return await db.form.findUnique({
+    where: { id: formId, isPublished: true },
+    select: { content: true, name: true, isAuth: true },
+  });
 };
