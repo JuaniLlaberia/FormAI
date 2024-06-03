@@ -23,6 +23,8 @@ export type ElementsType =
   | 'DateField'
   | 'OptionsField';
 
+export type SubmitFunction = (key: string, value: string) => void;
+
 export type FormElement = {
   type: ElementsType;
   construct: (id: string) => FormElementInstance;
@@ -33,8 +35,15 @@ export type FormElement = {
   };
 
   designComponent: FC<{ elementInstance: FormElementInstance }>;
-  formComponent: FC;
+  formComponent: FC<{
+    elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
+    isInvalid?: boolean;
+    defaultValue?: string;
+  }>;
   propertiesComponent: FC<{ elementInstance: FormElementInstance }>;
+
+  validate: (formElement: FormElementInstance, currenValue: string) => boolean;
 };
 
 export type FormElementInstance = {
