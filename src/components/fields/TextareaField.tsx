@@ -4,12 +4,13 @@ import { ScanText, Type } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
+  SubmitFunction,
 } from '@/app/dashboard/form/[formId]/edit/(components)/FormElements';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -17,6 +18,7 @@ import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/
 import { Switch } from '../ui/switch';
 import { Textarea } from '../ui/textarea';
 import RemoveFieldBtn from './(components)/RemoveFieldBtn';
+import { cn } from '@/lib/utils';
 
 const type: ElementsType = 'TextareaField';
 
@@ -47,8 +49,15 @@ export const TextareaFieldFormElement: FormElement = {
   },
 
   designComponent: DesignComponent,
-  formComponent: () => <div>Form Component</div>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
+
+  validate: (formElement: FormElementInstance, currentValue: string) => {
+    const element = formElement as CustomInstance;
+    if (element.extraAttributes.required) return currentValue.length > 0;
+
+    return true;
+  },
 };
 
 type CustomInstance = FormElementInstance & {
@@ -79,6 +88,60 @@ function DesignComponent({
   );
 }
 
+function FormComponent({
+  elementInstance,
+  submitValue,
+  isInvalid,
+  defaultValue,
+}: {
+  elementInstance: FormElementInstance;
+  submitValue?: SubmitFunction;
+  isInvalid?: boolean;
+  defaultValue?: string;
+}) {
+  const element = elementInstance as CustomInstance;
+  const extraAtt = element.extraAttributes;
+
+  const [value, setValue] = useState<string>(defaultValue || '');
+  const [error, setError] = useState<boolean>(false);
+
+  useEffect(() => {
+    setError(isInvalid === true);
+  }, [isInvalid]);
+
+  return (
+    <div className='flex flex-col w-full gap-2'>
+      <Label className={cn(error && 'text-red-500')}>{extraAtt.label}</Label>
+      <Textarea
+        className={cn(error && 'border-red-500')}
+        required={extraAtt.required}
+        placeholder={extraAtt.placeholder}
+        onChange={e => setValue(e.target.value)}
+        onBlur={e => {
+          if (!submitValue) return;
+          const valid = TextareaFieldFormElement.validate(
+            element,
+            e.target.value
+          );
+          setError(!valid);
+          if (!valid) return;
+
+          submitValue(element.id, e.target.value);
+        }}
+        value={value}
+      />
+      <p
+        className={cn(
+          'text-xs px-1',
+          error ? 'text-red-500' : 'text-muted-foreground'
+        )}
+      >
+        {extraAtt.helperText ? extraAtt.helperText : null}
+      </p>
+    </div>
+  );
+}
+
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
   elementInstance,
@@ -89,16 +152,17 @@ function PropertiesComponent({
   const { helperText, label, placeholder, required } = element.extraAttributes;
 
   const { updateElement } = useFormContext();
-  const { register, handleSubmit, reset } = useForm<propertiesFormSchemaType>({
-    resolver: zodResolver(propertiesSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      label,
-      helperText,
-      placeholder,
-      required,
-    },
-  });
+  const { register, handleSubmit, reset, getValues, setValue, watch } =
+    useForm<propertiesFormSchemaType>({
+      resolver: zodResolver(propertiesSchema),
+      mode: 'onBlur',
+      defaultValues: {
+        label,
+        helperText,
+        placeholder,
+        required,
+      },
+    });
 
   useEffect(() => {
     reset(element.extraAttributes);
@@ -174,7 +238,12 @@ function PropertiesComponent({
             Extra indications you want to give the users. it will be display
             beloy the field.
           </p>
-          <Switch />
+          <Switch
+            onClick={() => {
+              setValue('required', !getValues('required'));
+            }}
+            checked={watch('required')}
+          />
         </div>
       </div>
       <RemoveFieldBtn elementId={element.id} />

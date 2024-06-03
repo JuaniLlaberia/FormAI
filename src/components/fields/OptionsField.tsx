@@ -1,11 +1,12 @@
 'use client';
 
-import { SquareMenu } from 'lucide-react';
+import { Plus, SquareMenu, X } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 import {
   ElementsType,
   FormElement,
@@ -16,7 +17,7 @@ import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
 import { Switch } from '../ui/switch';
 import { Select, SelectTrigger, SelectValue } from '../ui/select';
-import RemoveFieldBtn from './(components)/RemoveFieldBtn';
+import { Button } from '../ui/button';
 
 const type: ElementsType = 'OptionsField';
 
@@ -25,7 +26,7 @@ const extraAttributes = {
   helperText: 'Helper text',
   required: false,
   placeholder: 'Select a value',
-  options: [],
+  options: ['New value'],
 };
 
 const propertiesSchema = z.object({
@@ -87,7 +88,8 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { helperText, label, placeholder, required } = element.extraAttributes;
+  const { helperText, label, placeholder, required, options } =
+    element.extraAttributes;
 
   const { updateElement } = useFormContext();
   const { register, handleSubmit, reset, setValue, getValues, watch } =
@@ -99,7 +101,7 @@ function PropertiesComponent({
         helperText,
         placeholder,
         required,
-        options: element.extraAttributes.options,
+        options,
       },
     });
 
@@ -171,21 +173,52 @@ function PropertiesComponent({
           the field.
         </p>
       </div>
+
       <div className='mb-2'>
-        {/* <div className='flex justify-between items-center'>
-          <Label htmlFor='options'>Options</Label>
+        <div className='flex items-center justify-between my-4'>
+          <Label>Options</Label>
           <Button
+            size='sm'
+            variant='outline'
             onClick={e => {
               e.preventDefault();
-              setValue('options', [...getValues('options'), 'New option']);
+              const prevValues = getValues('options');
+              setValue('options', [...prevValues, 'New value']);
             }}
-            variant='outline'
-            size='icon'
-            className='size-7'
           >
-            <Plus className='size-4' />
+            Add <Plus className='size-4 ml-1.5' />
           </Button>
-        </div> */}
+        </div>
+        <ul className='flex flex-col gap-1.5 px-1'>
+          {watch('options').map((op, i) => (
+            <li
+              key={i}
+              className='flex items-center gap-1'
+            >
+              <Input
+                placeholder='Options value...'
+                defaultValue={op}
+                type='text'
+                // onChange={() => {
+                //   const values = getValues('options');
+                //   const newVals = values.slice(i, 1);
+                //   setValue('options', newVals);
+                // }}
+              />
+              <Button
+                size='icon'
+                variant='ghost'
+                // onClick={() => {
+                //   const values = getValues('options');
+                //   const newVals = values.slice(i, 1);
+                //   setValue('options', newVals);
+                // }}
+              >
+                <X className='size-4' />
+              </Button>
+            </li>
+          ))}
+        </ul>
       </div>
       <div className='mb-2 flex flex-col gap-2 border border-border rounded-md mt-4 py-5 px-3'>
         <Label htmlFor='helper-text'>Required</Label>

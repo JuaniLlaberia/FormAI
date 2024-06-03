@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 import {
   ElementsType,
   FormElement,
@@ -14,7 +15,6 @@ import {
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
-import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'TitleField';
 
@@ -39,8 +39,10 @@ export const TitleFieldFormElement: FormElement = {
   },
 
   designComponent: DesignComponent,
-  formComponent: () => <div>Form Component</div>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
+
+  validate: () => true,
 };
 
 type CustomInstance = FormElementInstance & {
@@ -61,6 +63,17 @@ function DesignComponent({
       <h3 className='text-xl'>{extraAtt.title}</h3>
     </div>
   );
+}
+
+function FormComponent({
+  elementInstance,
+}: {
+  elementInstance: FormElementInstance;
+}) {
+  const element = elementInstance as CustomInstance;
+
+  const { title } = element.extraAttributes;
+  return <h1 className='text-xl'>{title}</h1>;
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;

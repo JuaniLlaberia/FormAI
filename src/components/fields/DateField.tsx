@@ -4,19 +4,25 @@ import { CalendarDays, Type } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
+  SubmitFunction,
 } from '@/app/dashboard/form/[formId]/edit/(components)/FormElements';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { useFormContext } from '@/app/dashboard/form/[formId]/edit/(components)/FormContext';
 import { Switch } from '../ui/switch';
 import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { formatDate } from '@/lib/formatters';
+import { format } from 'date-fns';
+import { Calendar } from '../ui/calendar';
 
 const type: ElementsType = 'DateField';
 
@@ -45,8 +51,15 @@ export const DateFieldFormElement: FormElement = {
   },
 
   designComponent: DesignComponent,
-  formComponent: () => <div>Form Component</div>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
+
+  validate: (formElement: FormElementInstance, currentValue: string) => {
+    const element = formElement as CustomInstance;
+    if (element.extraAttributes.required) return currentValue.length > 0;
+
+    return true;
+  },
 };
 
 type CustomInstance = FormElementInstance & {
@@ -78,6 +91,80 @@ function DesignComponent({
   );
 }
 
+function FormComponent({
+  elementInstance,
+  submitValue,
+  isInvalid,
+  defaultValue,
+}: {
+  elementInstance: FormElementInstance;
+  submitValue?: SubmitFunction;
+  isInvalid?: boolean;
+  defaultValue?: string;
+}) {
+  const element = elementInstance as CustomInstance;
+  const extraAtt = element.extraAttributes;
+
+  const [date, setDate] = useState<Date | undefined>(
+    defaultValue ? new Date(defaultValue) : undefined
+  );
+  const [error, setError] = useState<boolean>(false);
+
+  useEffect(() => {
+    setError(isInvalid === true);
+  }, [isInvalid]);
+
+  return (
+    <div className='flex flex-col w-full gap-2'>
+      <Label className={cn(error && 'text-red-500')}>{extraAtt.label}</Label>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant='outline'
+            className={cn(
+              'w-full justify-start text-left font-normal',
+              !date && 'text-muted-foreground',
+              error && 'border-red-500'
+            )}
+          >
+            <CalendarDays className='size-4 mr-2' />
+            {date ? format(date, 'PPP') : <span>Pick a date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className='w-auto p-0'
+          align='start'
+        >
+          <Calendar
+            mode='single'
+            selected={date}
+            onSelect={date => {
+              setDate(date);
+
+              if (!submitValue) return;
+
+              const value = date?.toUTCString() || '';
+              const valid = DateFieldFormElement.validate(element, value);
+
+              setError(!valid);
+              submitValue(element.id, value);
+            }}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+      <p
+        className={cn(
+          'text-xs px-1',
+          error ? 'text-red-500' : 'text-muted-foreground'
+        )}
+      >
+        {extraAtt.helperText ? extraAtt.helperText : null}
+      </p>
+    </div>
+  );
+}
+
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({
   elementInstance,
@@ -88,15 +175,16 @@ function PropertiesComponent({
   const { helperText, label, required } = element.extraAttributes;
 
   const { updateElement } = useFormContext();
-  const { register, handleSubmit, reset } = useForm<propertiesFormSchemaType>({
-    resolver: zodResolver(propertiesSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      label,
-      helperText,
-      required,
-    },
-  });
+  const { register, handleSubmit, reset, setValue, getValues, watch } =
+    useForm<propertiesFormSchemaType>({
+      resolver: zodResolver(propertiesSchema),
+      mode: 'onBlur',
+      defaultValues: {
+        label,
+        helperText,
+        required,
+      },
+    });
 
   useEffect(() => {
     reset(element.extraAttributes);
@@ -156,7 +244,12 @@ function PropertiesComponent({
             Extra indications you want to give the users. it will be display
             beloy the field.
           </p>
-          <Switch />
+          <Switch
+            onClick={() => {
+              setValue('required', !getValues('required'));
+            }}
+            checked={watch('required')}
+          />
         </div>
       </div>
       <RemoveFieldBtn elementId={element.id} />

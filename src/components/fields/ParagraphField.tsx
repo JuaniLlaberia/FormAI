@@ -39,8 +39,10 @@ export const ParagraphFieldFormElement: FormElement = {
   },
 
   designComponent: DesignComponent,
-  formComponent: () => <div>Form Component</div>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
+
+  validate: () => true,
 };
 
 type CustomInstance = FormElementInstance & {
@@ -61,6 +63,17 @@ function DesignComponent({
       <p className='text-sm'>{extraAtt.text}</p>
     </div>
   );
+}
+
+function FormComponent({
+  elementInstance,
+}: {
+  elementInstance: FormElementInstance;
+}) {
+  const element = elementInstance as CustomInstance;
+
+  const { text } = element.extraAttributes;
+  return <p className='text-muted-foreground'>{text}</p>;
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;

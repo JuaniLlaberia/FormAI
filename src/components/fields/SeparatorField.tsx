@@ -2,6 +2,7 @@
 
 import { SeparatorHorizontal } from 'lucide-react';
 
+import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 import {
   ElementsType,
   FormElement,
@@ -9,7 +10,6 @@ import {
 } from '@/app/dashboard/form/[formId]/edit/(components)/FormElements';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
-import RemoveFieldBtn from './(components)/RemoveFieldBtn';
 
 const type: ElementsType = 'SeparatorField';
 
@@ -25,8 +25,10 @@ export const SeparatorFieldFormElement: FormElement = {
   },
 
   designComponent: DesignComponent,
-  formComponent: () => <div>Form Component</div>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
+
+  validate: () => true,
 };
 
 function DesignComponent() {
@@ -36,6 +38,14 @@ function DesignComponent() {
       <Separator />
     </div>
   );
+}
+
+function FormComponent({
+  elementInstance,
+}: {
+  elementInstance: FormElementInstance;
+}) {
+  return <Separator />;
 }
 
 function PropertiesComponent({
