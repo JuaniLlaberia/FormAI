@@ -16,6 +16,20 @@ export const metadata: Metadata = {
   title: 'FormAI',
   description:
     'Created and Customize forms with AI help. Publish and get submissions from your audience.',
+  icons: {
+    icon: [
+      {
+        media: '(prefers-color-scheme: light)',
+        url: '/logo-light.png',
+        href: '/logo-light.png',
+      },
+      {
+        media: '(prefers-color-scheme: dark)',
+        url: '/logo-dark.png',
+        href: '/logo-dark.png',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

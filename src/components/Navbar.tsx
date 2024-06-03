@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import Image from 'next/image';
 
 const cabin = Cabin({ subsets: ['latin'] });
 
@@ -27,9 +28,17 @@ const Navbar = async () => {
           href='/'
           className={cn(
             cabin.className,
-            'flex items-center gap-2 font-semibold tracking-wide text-lg'
+            'flex items-center gap-1 font-semibold tracking-wide text-lg'
           )}
         >
+          <div className='relative size-16'>
+            <Image
+              src='/logo-dark.png'
+              alt='logo'
+              fill
+              draggable={false}
+            />
+          </div>
           FormAI
         </Link>
         <div className='flex gap-3'>
