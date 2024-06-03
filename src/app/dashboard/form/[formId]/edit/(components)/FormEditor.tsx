@@ -1,7 +1,7 @@
 'use client';
 
 import { Form as FormType } from '@prisma/client';
-import { Eye, Save, Send, Settings } from 'lucide-react';
+import { Eye, Loader, Save, Send, Settings } from 'lucide-react';
 import {
   DndContext,
   MouseSensor,
@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import Form from './Form';
 import Sidebar from './Sidebar';
+import PublishModal from './PublishModal';
 import DragOverlayWrapper from './DragOverlayWrapper';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,7 +46,7 @@ const FormEditor = ({ form }: { form: FormType }) => {
 
   const sensors = useSensors(mouseSensor, touchSensor);
 
-  const { mutate: updateForm } = useMutation({
+  const { mutate: updateForm, isPending } = useMutation({
     mutationKey: ['update-form'],
     mutationFn: updateFormAction,
     onSuccess: () =>
@@ -100,6 +101,7 @@ const FormEditor = ({ form }: { form: FormType }) => {
               size='sm'
               className='hidden md:flex'
               variant='ghost'
+              disabled={isPending}
               onClick={() => {
                 updateForm({
                   formId: form.id,
@@ -109,14 +111,9 @@ const FormEditor = ({ form }: { form: FormType }) => {
             >
               <Save className='size-4 mr-1.5' />
               Save
+              {isPending && <Loader className='size-4 ml-1.5 animate-spin' />}
             </Button>
-            <Button
-              size='sm'
-              className='hidden md:flex'
-            >
-              <Send className='size-4 mr-1.5' />
-              Publish
-            </Button>
+            <PublishModal formId={form.id} />
             <DropdownMenu>
               <DropdownMenuTrigger
                 asChild
@@ -133,7 +130,14 @@ const FormEditor = ({ form }: { form: FormType }) => {
                 <DropdownMenuItem>
                   <Eye className='size-4 mr-2.5' /> Preview
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    updateForm({
+                      formId: form.id,
+                      formData: { content: JSON.stringify(elements) },
+                    });
+                  }}
+                >
                   <Save className='size-4 mr-2.5' /> Save
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
