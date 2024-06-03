@@ -21,7 +21,7 @@ const Navbar = async () => {
   const user = await getUser();
 
   return (
-    <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-border backdrop-blur-lg transition-all px-4 md:px-8 lg:px-16 xl:px-32'>
+    <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-border bg-background backdrop-blur-lg transition-all px-4 md:px-8 lg:px-16 xl:px-32'>
       <div className='flex h-full items-center justify-between'>
         <Link
           href='/'
