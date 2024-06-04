@@ -31,13 +31,8 @@ const Navbar = async () => {
             'flex items-center gap-1 font-semibold tracking-wide text-lg'
           )}
         >
-          <div className='relative size-16'>
-            <Image
-              src='/logo-dark.png'
-              alt='logo'
-              fill
-              draggable={false}
-            />
+          <div className='relative size-14'>
+            <Image src='/logo-dark.png' alt='logo' fill draggable={false} />
           </div>
           FormAI
         </Link>
