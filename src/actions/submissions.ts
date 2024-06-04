@@ -20,7 +20,15 @@ export const submitForm = async ({
   });
 };
 
-export const getSubmissions = async ({ formId }: { formId: string }) => {
+export const getSubmissions = async ({
+  formId,
+  page,
+  perPage,
+}: {
+  formId: string;
+  page: string;
+  perPage: string;
+}) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -30,6 +38,20 @@ export const getSubmissions = async ({ formId }: { formId: string }) => {
   if (form?.createdBy !== user.id)
     throw new Error('You cannot access this data.');
 
-  const submission = db.submission.findMany({ where: { formId: form.id } });
-  return submission;
+  const skip = (Number(page) - 1) * Number(perPage);
+
+  const submission = await db.submission.findMany({
+    where: { formId: form.id },
+    skip,
+    take: Number(perPage),
+  });
+
+  const totalSubmissionsCount = await db.submission.count({
+    where: { formId: form.id },
+  });
+
+  return {
+    submissions: submission,
+    count: totalSubmissionsCount,
+  };
 };
