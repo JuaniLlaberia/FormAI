@@ -80,13 +80,21 @@ const FormInformationPage = async ({
             {description}
           </p>
         </div>
-        <InfoSettings />
+        <InfoSettings
+          formId={form.id}
+          formName={form.name}
+          columns={columns}
+          data={rows}
+        />
       </div>
 
       <CopyBtn formId={id} />
 
       <h2 className='text-sm font-medium px-1 mb-2'>Submissions</h2>
-      <SubmissionsTable columns={columns} rows={rows} />
+      <SubmissionsTable
+        columns={columns}
+        rows={rows}
+      />
 
       <Pagination count={submissions.count} />
     </div>
