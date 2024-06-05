@@ -131,7 +131,13 @@ export const generateFormWithAi = async ({
   });
 };
 
-export const publishForm = async ({ formId }: { formId: string }) => {
+export const publishForm = async ({
+  formId,
+  content,
+}: {
+  formId: string;
+  content: string;
+}) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -141,6 +147,7 @@ export const publishForm = async ({ formId }: { formId: string }) => {
     where: { id: formId },
     data: {
       isPublished: true,
+      content,
       updatedAt: new Date(),
     },
   });
