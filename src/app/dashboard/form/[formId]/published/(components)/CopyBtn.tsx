@@ -11,7 +11,9 @@ const CopyBtn = ({ formId }: { formId: string }) => {
   const { toast } = useToast();
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`http://localhost:3000/submit/${formId}`);
+    navigator.clipboard.writeText(
+      `${process.env.NEXT_PUBLIC_URL}/submit/${formId}`
+    );
     toast({
       title: 'Form link copied',
       description: 'Now you can start sharing this with all your users.',
@@ -23,7 +25,7 @@ const CopyBtn = ({ formId }: { formId: string }) => {
       <Input
         readOnly
         type='text'
-        value={`http://localhost:3000/submit/${formId}`}
+        value={`${process.env.NEXT_PUBLIC_URL}/submit/${formId}`}
       />
       <Button
         onClick={() => copyLink()}
