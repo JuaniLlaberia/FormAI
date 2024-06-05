@@ -49,6 +49,7 @@ const Filters = ({
             variant='ghost'
             className='px-3 absolute right-0 md:hidden'
           >
+            <span className='sr-only'>Filter and sort options</span>
             <EllipsisVertical className='size-4 text-muted-foreground' />
           </Button>
         </DrawerTrigger>
@@ -99,7 +100,10 @@ const Filters = ({
           </ul>
           <Separator />
           <ul>
-            <DrawerClose asChild>
+            <DrawerClose
+              asChild
+              aria-label='filter button'
+            >
               <li
                 onClick={() => setSeachParam('sortBy', 'activity')}
                 className='py-3 px-2 flex justify-between items-center hover:bg-background-2 rounded-md'
@@ -113,7 +117,10 @@ const Filters = ({
                 />
               </li>
             </DrawerClose>
-            <DrawerClose asChild>
+            <DrawerClose
+              asChild
+              aria-label='filter button'
+            >
               <li
                 onClick={() => setSeachParam('sortBy', 'name')}
                 className='py-3 px-2 flex justify-between items-center hover:bg-background-2 rounded-md'
@@ -152,9 +159,24 @@ const Filters = ({
         className='hidden md:flex'
       >
         <TabsList>
-          <TabsTrigger value='all'>All</TabsTrigger>
-          <TabsTrigger value='draft'>Drafts</TabsTrigger>
-          <TabsTrigger value='published'>Published</TabsTrigger>
+          <TabsTrigger
+            role='tab'
+            value='all'
+          >
+            All
+          </TabsTrigger>
+          <TabsTrigger
+            role='tab'
+            value='draft'
+          >
+            Drafts
+          </TabsTrigger>
+          <TabsTrigger
+            role='tab'
+            value='published'
+          >
+            Published
+          </TabsTrigger>
         </TabsList>
       </Tabs>
     </>

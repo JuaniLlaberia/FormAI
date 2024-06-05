@@ -77,7 +77,7 @@ const DashboardPage = async ({
               key={form.id}
               className='bg-background-2 hover:bg-muted/45 hover:border-primary/50 p-4 px-5 border border-border relative rounded-md shadow-sm transition-colors'
             >
-              <li>
+              <>
                 <Link
                   href={`/dashboard/form/${form.id}/${
                     form.isPublished ? 'information' : 'edit'
@@ -92,6 +92,7 @@ const DashboardPage = async ({
                 <Dialog>
                   <DropdownMenu>
                     <DropdownMenuTrigger className='absolute top-4 right-3.5 p-1.5 text-muted-foreground rounded-md hover:bg-muted hover:text-primary transition-all'>
+                      <span className='sr-only'>Options menu</span>
                       <Ellipsis className='size-4' />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -146,7 +147,7 @@ const DashboardPage = async ({
                     Last updated {formatDate(form.updatedAt)}
                   </p>
                 </div>
-              </li>
+              </>
             </li>
           ))
         ) : (

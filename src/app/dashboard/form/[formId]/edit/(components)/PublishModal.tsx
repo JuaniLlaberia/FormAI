@@ -43,7 +43,7 @@ const PublishModal = ({ formId }: { formId: string }) => {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           size='sm'
           className='text-white bg-gradient-to-r from-blue-400 to-blue-600 hover:opacity-90'
@@ -66,7 +66,7 @@ const PublishModal = ({ formId }: { formId: string }) => {
           <AlertTitle>This action in irreversible</AlertTitle>
         </Alert>
         <div className='flex justify-between mt-2'>
-          <DialogClose>
+          <DialogClose asChild>
             <Button
               disabled={isPending}
               size='sm'

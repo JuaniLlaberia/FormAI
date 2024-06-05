@@ -52,6 +52,7 @@ const Home = () => {
         <ul className='relative flex flex-col lg:flex-row lg:justify-center items-center gap-12 pb-4'>
           <li className='w-60 h-60 lg:w-72 lg:h-72 rounded-md bg-background-2 border border-border hover:border-primary/30 relative flex items-center justify-center'>
             <img
+              alt='arrow'
               src='/arrow.svg'
               className='hidden lg:block absolute w-44 right-[-7.5rem] z-[50] top-[-0.51rem] transform -translate-y-1/2'
             />
@@ -72,14 +73,17 @@ const Home = () => {
           </li>
           <li className='w-60 h-60 lg:w-72 lg:h-72 rounded-md bg-background-2 border border-border hover:border-primary/30 relative flex items-center justify-center'>
             <img
+              alt='arrow'
               src='/arrow.svg'
               className='hidden lg:block absolute w-44 left-[14rem] z-[50] top-[18.5rem] transform -translate-y-1/2 scale-y-[-1]'
             />
             <img
+              alt='arrow'
               src='/arrow.svg'
               className='block lg:hidden w-44 rotate-90 absolute top-[-7.5rem] left-[15.25rem] transform -translate-x-1/2'
             />
             <img
+              alt='arrow'
               src='/arrow.svg'
               className='block lg:hidden w-44 rotate-90 absolute z-[50] bottom-[-7.5rem] left-[-0.5rem] transform -translate-x-1/2 scale-y-[-1]'
             />

@@ -50,6 +50,7 @@ const InfoSettings = ({
                 variant='outline'
                 className='md:hidden'
               >
+                <span className='sr-only'>Settings menu</span>
                 <Settings className='size-5' />
               </Button>
               <Button

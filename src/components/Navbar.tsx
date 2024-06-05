@@ -54,6 +54,7 @@ const Navbar = async () => {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger>
+                  <span className='sr-only'>user menu</span>
                   <Avatar>
                     <AvatarFallback>
                       {user.given_name?.at(0)?.toLocaleUpperCase()}

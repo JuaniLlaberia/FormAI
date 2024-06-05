@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { AlertCircle, Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 import { deleteForm } from '@/actions/forms';
 import { Alert, AlertTitle } from '@/components/ui/alert';
@@ -14,7 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
 
 const DeleteFormModal = ({
   formId,
