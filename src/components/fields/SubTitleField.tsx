@@ -96,7 +96,7 @@ function PropertiesComponent({
 
   useEffect(() => {
     reset(element.extraAttributes);
-  }, [element]);
+  }, [element, reset]);
 
   const applyChanges = (values: propertiesFormSchemaType) => {
     updateElement(element.id, {
