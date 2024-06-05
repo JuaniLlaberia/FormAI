@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 const DeleteFormModal = ({
   formId,
@@ -22,16 +23,19 @@ const DeleteFormModal = ({
   formId: string;
   formName: string;
 }) => {
+  const router = useRouter();
   const { toast } = useToast();
 
   const { mutate: removeForm, isPending } = useMutation({
     mutationKey: ['delete-form'],
     mutationFn: deleteForm,
-    onSuccess: () =>
+    onSuccess: () => {
+      router.push('/dashboard');
       toast({
         title: 'Form deleted successfully',
         description: 'All data related to this form was deleted.',
-      }),
+      });
+    },
     onError: () =>
       toast({
         title: 'Failed to delete form',

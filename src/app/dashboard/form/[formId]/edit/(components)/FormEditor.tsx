@@ -1,7 +1,7 @@
 'use client';
 
 import { Form as FormType } from '@prisma/client';
-import { Eye, Loader, Save, Send, Settings } from 'lucide-react';
+import { Loader, Save } from 'lucide-react';
 import {
   DndContext,
   MouseSensor,
@@ -17,13 +17,6 @@ import Sidebar from './Sidebar';
 import PublishModal from './PublishModal';
 import DragOverlayWrapper from './DragOverlayWrapper';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useFormContext } from './FormContext';
 import { updateForm as updateFormAction } from '@/actions/forms';
 import { useToast } from '@/components/ui/use-toast';
@@ -77,7 +70,7 @@ const FormEditor = ({ form }: { form: FormType }) => {
   return (
     <DndContext sensors={sensors}>
       <div className='flex flex-col w-full flex-1'>
-        <div className='flex justify-between p-2 gap-3 items-center mb-3'>
+        <div className='flex flex-col md:flex-row justify-between p-2 gap-3 items-start md:items-center mb-3'>
           <input
             onBlur={e => {
               updateFormAction({
@@ -88,18 +81,9 @@ const FormEditor = ({ form }: { form: FormType }) => {
             className='text-xl lg:text-2xl tracking-tight font-semibold bg-transparent outline-none ring-none'
             defaultValue={form.name}
           />
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center justify-end gap-2 w-full'>
             <Button
               size='sm'
-              className='hidden md:flex'
-              variant='ghost'
-            >
-              <Eye className='size-4 mr-1.5' />
-              Preview
-            </Button>
-            <Button
-              size='sm'
-              className='hidden md:flex'
               variant='ghost'
               disabled={isPending}
               onClick={() => {
@@ -114,38 +98,6 @@ const FormEditor = ({ form }: { form: FormType }) => {
               {isPending && <Loader className='size-4 ml-1.5 animate-spin' />}
             </Button>
             <PublishModal formId={form.id} />
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                asChild
-                className='flex md:hidden'
-              >
-                <Button
-                  size='icon'
-                  variant='ghost'
-                >
-                  <Settings className='size-5' />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Eye className='size-4 mr-2.5' /> Preview
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    updateForm({
-                      formId: form.id,
-                      formData: { content: JSON.stringify(elements) },
-                    });
-                  }}
-                >
-                  <Save className='size-4 mr-2.5' /> Save
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Send className='size-4 mr-2.5' /> Publish
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
         <div className='flex flex-1 gap-2 md:gap-3 lg:gap-4 xl:gap-5'>

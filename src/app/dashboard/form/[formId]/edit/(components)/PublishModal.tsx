@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { publishForm as publishFormAction } from '@/actions/forms';
+import { useFormContext } from './FormContext';
 
 const PublishModal = ({ formId }: { formId: string }) => {
+  const { elements } = useFormContext();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -76,7 +78,9 @@ const PublishModal = ({ formId }: { formId: string }) => {
           <Button
             disabled={isPending}
             size='sm'
-            onClick={() => publishForm({ formId })}
+            onClick={() =>
+              publishForm({ formId, content: JSON.stringify(elements) })
+            }
           >
             {isPending && <Loader className='size-4 mr-1.5 animate-spin' />}
             Publish

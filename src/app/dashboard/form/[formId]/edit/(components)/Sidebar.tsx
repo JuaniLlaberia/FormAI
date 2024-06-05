@@ -10,7 +10,7 @@ const Sidebar = () => {
   const { selectedElement } = useFormContext();
 
   return (
-    <aside className='flex flex-col h-full max-w-[275px] bg-background-2 rounded-md border border-border'>
+    <aside className='sticky top-16 flex flex-col h-full max-w-[275px] bg-background-2 rounded-md border border-border'>
       {selectedElement === null ? <SidebarElements /> : <SidebarPropForm />}
     </aside>
   );
