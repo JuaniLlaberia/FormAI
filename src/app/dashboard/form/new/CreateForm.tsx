@@ -1,6 +1,12 @@
 'use client';
 
-import { ArrowLeft, CircleAlert, Loader } from 'lucide-react';
+import {
+  ArrowLeft,
+  Brush,
+  CircleAlert,
+  LayoutTemplate,
+  Loader,
+} from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -24,12 +30,14 @@ const FORM_OPTIONS = [
     label: 'Scratch',
     description: 'Build using AI with full customization.',
     value: 'scratch',
+    icon: <Brush className='size-5' />,
   },
   {
     id: 'templates',
     label: 'Templates',
     description: 'Use pre-build forms for quicker start.',
     value: 'templates',
+    icon: <LayoutTemplate className='size-5' />,
   },
 ];
 
@@ -150,7 +158,11 @@ const CreateForm = () => {
           {!isLastStep ? 'Continue' : 'Finish'}
         </Button>
         {!isFirstStep && (
-          <Button onClick={e => prevStep(e)} variant='ghost' className='w-full'>
+          <Button
+            onClick={e => prevStep(e)}
+            variant='ghost'
+            className='w-full'
+          >
             <ArrowLeft className='size-4 mr-1.5' />
             Go back
           </Button>

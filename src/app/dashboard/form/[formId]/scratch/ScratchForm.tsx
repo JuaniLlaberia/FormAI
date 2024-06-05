@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { generateFormWithAi } from '@/actions/forms';
+import { generateFormWithAi, updateForm } from '@/actions/forms';
 import { useToast } from '@/components/ui/use-toast';
 
 const ScratchForm = ({ formId }: { formId: string }) => {
@@ -26,6 +26,21 @@ const ScratchForm = ({ formId }: { formId: string }) => {
       toast({
         title: 'Something went wrong',
         description: `Failed to generate form using AI. Please try again.`,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const { mutate: skipGenerateForm, isPending: isPending2 } = useMutation({
+    mutationKey: ['generate-skip'],
+    mutationFn: updateForm,
+    onSuccess: () => {
+      router.push(`/dashboard/form/${formId}/edit`);
+    },
+    onError: () => {
+      toast({
+        title: 'Something went wrong',
+        description: `Failed to skip this step. Please try again.`,
         variant: 'destructive',
       });
     },
@@ -58,17 +73,27 @@ const ScratchForm = ({ formId }: { formId: string }) => {
         placeholder='e.g. A form to track students attendance to class. Include email and full name fields...'
       />
       <div className='flex  gap-2 w-full justify-end mt-3'>
-        <Button size='sm' variant='ghost' disabled={isPending}>
+        <Button
+          onClick={() =>
+            skipGenerateForm({ formId, formData: { needsConfigure: false } })
+          }
+          size='sm'
+          variant='ghost'
+          disabled={isPending || isPending2}
+        >
+          {isPending2 ? (
+            <Loader className='size-4 mr-1.5 animate-spin' />
+          ) : null}
           Skip
         </Button>
         <Button
           onClick={() => generateForm({ prompt, formId })}
           size='sm'
-          disabled={isPending}
+          disabled={isPending || isPending2}
         >
           {isPending ? <Loader className='size-4 mr-1.5 animate-spin' /> : null}
           Generate with Ai
-          <Sparkles className='size-3.5 ml-1.5 fill-primary' />
+          <Sparkles className='size-3.5 ml-1.5 fill-secondary' />
         </Button>
       </div>
     </div>

@@ -7,24 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum RadiusStyle {
-  xs
-  sm
-  md
-  lg
-  xl
-}
-
-enum BgStyle {
-  red
-}
-
-enum BorderStyle {
-  normal
-  shadowed
-  bordered
-}
-
 enum ConfigureType {
   scratch
   templates
@@ -36,15 +18,6 @@ model User {
   fullName     String
   profileImage String?
   Form         Form[]
-}
-
-model Style {
-  id      String      @id @default(uuid())
-  radius  RadiusStyle
-  bgColor BgStyle
-  border  BorderStyle
-
-  Form Form[]
 }
 
 model Form {
@@ -62,9 +35,16 @@ model Form {
   needsConfigure Boolean       @default(true)
   configureType  ConfigureType
 
-  styleId String?
-  style   Style?  @relation(fields: [styleId], references: [id])
+  createdBy  String
+  user       User         @relation(fields: [createdBy], references: [id])
+  Submission Submission[]
+}
 
-  createdBy String
-  user      User   @relation(fields: [createdBy], references: [id])
+model Submission {
+  id      String @id @default(cuid())
+  content String
+  formId  String
+  form    Form   @relation(fields: [formId], references: [id])
+
+  createdAt DateTime @default(now())
 }

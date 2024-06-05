@@ -3,14 +3,22 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import { ConfigureType, Form } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 import { db } from '@/db';
 import { model } from '@/gemini';
-import { revalidatePath } from 'next/cache';
 
 type PartialForm = Partial<Form>;
 
-export const getForms = async ({ search }: { search: string }) => {
+export const getForms = async ({
+  search,
+  filter,
+  sort,
+}: {
+  search: string;
+  filter: 'all' | 'draft' | 'published';
+  sort: 'activity' | 'name';
+}) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -20,8 +28,10 @@ export const getForms = async ({ search }: { search: string }) => {
     where: {
       createdBy: user.id,
       name: { contains: search, mode: 'insensitive' },
+      isPublished:
+        filter === 'draft' ? false : filter === 'published' ? true : undefined,
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: sort === 'activity' ? { updatedAt: 'desc' } : { name: 'desc' },
     select: {
       id: true,
       name: true,
@@ -78,6 +88,7 @@ export const updateForm = async ({
   if (!user) return redirect('/');
 
   await db.form.update({ where: { id: formId }, data: formData });
+  revalidatePath('/dashboard/form/[formId]/edit');
 };
 
 export const generateFormWithAi = async ({
@@ -92,8 +103,22 @@ export const generateFormWithAi = async ({
 
   if (!user) return redirect('/');
 
+  const jsonSchema = {
+    formFields: [
+      {
+        id: '',
+        type: '',
+        extraAttibutes: {
+          label: '',
+          placeholder: '',
+          required: '',
+          helperText: '',
+        },
+      },
+    ],
+  };
   //Generate field JSON using Gemini API
-  const fullPromp = `Create inputs for a form, description: ${prompt}, On the basis of description please give form in json format with form fields (including name, placeholder and label). In Json format, nothing else.`;
+  const fullPromp = `Create inputs for a form, description: ${prompt}, On the basis of description please give form in json format with form fields (including label, placeholder, helperText (extra indications for that inpu), required set to false and also include the type of the input. Being, text: TextField, options: OptionsField, etc... And the format should be like this: {id, type, extraAttributes: {label, placeholder, required, helperText}}}). Follow this JSON schema <JSONSchema>${jsonSchema}.`;
 
   const result = await model.generateContent(fullPromp);
   const response = await result.response;
@@ -102,7 +127,29 @@ export const generateFormWithAi = async ({
   //Store generated content in DB
   await db.form.update({
     where: { id: formId },
-    data: { content: json, needsConfigure: false },
+    data: { content: json, needsConfigure: false, updatedAt: new Date() },
+  });
+};
+
+export const publishForm = async ({
+  formId,
+  content,
+}: {
+  formId: string;
+  content: string;
+}) => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) return redirect('/');
+
+  return await db.form.update({
+    where: { id: formId },
+    data: {
+      isPublished: true,
+      content,
+      updatedAt: new Date(),
+    },
   });
 };
 
@@ -113,9 +160,19 @@ export const deleteForm = async ({ formId }: { formId: string }) => {
   if (!user) return redirect('/');
 
   const form = await db.form.findUnique({ where: { id: formId } });
-  if (form?.createdBy !== user.id) return redirect('/');
+  if (form?.createdBy !== user.id)
+    throw new Error('This form does not belong to you');
+
+  await db.submission.deleteMany({ where: { formId } });
 
   await db.form.delete({ where: { id: formId } });
 
   revalidatePath('/dashboard');
+};
+
+export const getFormContent = async ({ formId }: { formId: string }) => {
+  return await db.form.findUnique({
+    where: { id: formId, isPublished: true },
+    select: { content: true, name: true, isAuth: true },
+  });
 };

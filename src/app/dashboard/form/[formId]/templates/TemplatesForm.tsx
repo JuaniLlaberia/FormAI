@@ -25,47 +25,98 @@ const TEMPLATES = [
     description: 'Receive feedback about a course, product, class, etc.',
     value: 'feedback',
   },
-  // {
-  //   id: 'registration',
-  //   label: 'Registration',
-  //   description: 'Organize users with common information.',
-  //   value: 'registration',
-  // },
 ];
 
 const TEMPLATES_FIELDS_JSON = {
   contact: {
     formFields: [
       {
-        name: 'fullName',
-        placeholder: 'Enter your full name',
-        label: 'Full Name',
-      },
-      { name: 'email', placeholder: 'Enter your email', label: 'Email' },
-      {
-        name: 'phone',
-        placeholder: 'Enter your phone number',
-        label: 'Phone Number',
+        id: 'title',
+        type: 'TitleField',
+        extraAttributes: {
+          title: 'Contact us form',
+        },
       },
       {
-        name: 'comment',
-        placeholder: 'Extra comments',
-        label: 'Extra comments',
+        id: 'fullName',
+        type: 'TextField',
+        extraAttributes: {
+          label: 'Full name',
+          placeholder: 'Enter your full name',
+          helperText: 'Your full name',
+          required: false,
+        },
+      },
+      {
+        id: 'email',
+        type: 'TextField',
+        extraAttributes: {
+          label: 'Email',
+          placeholder: 'Enter your email',
+          helperText: 'Please enter a valid email address',
+          required: false,
+        },
+      },
+      {
+        id: 'phone',
+        type: 'TextField',
+        extraAttributes: {
+          label: 'Phone number',
+          placeholder: 'Enter your phone number',
+          helperText: 'Please enter a valid phone number',
+          required: false,
+        },
+      },
+      {
+        id: 'comment',
+        type: 'TextareaField',
+        extraAttributes: {
+          label: 'Extra comments',
+          placeholder: 'Extra comments',
+          helperText: '',
+          required: false,
+        },
       },
     ],
   },
   feedback: {
     formFields: [
-      { name: 'email', placeholder: 'Enter your email', label: 'Email' },
       {
-        name: 'phone',
-        placeholder: 'Enter your phone number',
-        label: 'Phone Number',
+        id: 'title',
+        type: 'TitleField',
+        extraAttributes: {
+          title: 'Feedback form',
+        },
       },
       {
-        name: 'feedback',
-        placeholder: 'Write your feedback here',
-        label: 'Feedback',
+        id: 'email',
+        type: 'TextField',
+        extraAttributes: {
+          label: 'Email',
+          placeholder: 'Enter your email',
+          helperText: 'Please enter a valid email address',
+          required: false,
+        },
+      },
+      {
+        id: 'phone',
+        type: 'TextField',
+        extraAttributes: {
+          label: 'Phone number',
+          placeholder: 'Enter your phone number',
+          helperText: 'Please enter a valid phone number',
+          required: false,
+        },
+      },
+      {
+        id: 'feedback',
+        type: 'TextareaField',
+        extraAttributes: {
+          label: 'Feedback',
+          placeholder: 'Write your feedback here',
+          helperText: 'Your opinion',
+          required: false,
+        },
       },
     ],
   },
@@ -111,12 +162,19 @@ const TemplatesForm = ({ formId }: { formId: string }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Radio register={register} fieldName='template' options={TEMPLATES} />
+      <Radio
+        register={register}
+        fieldName='template'
+        options={TEMPLATES}
+      />
       <Alert className='mb-3 text-muted-foreground'>
         <Info className='size-4 text-muted-foreground' />
         <AlertTitle>More comming soon</AlertTitle>
       </Alert>
-      <Button className='w-full' disabled={isPending}>
+      <Button
+        className='w-full'
+        disabled={isPending}
+      >
         {isPending && <Loader className='size-4 mr-1.5 animate-spin' />}
         Finish
       </Button>
