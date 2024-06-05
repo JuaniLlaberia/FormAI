@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { ArrowRight, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import { ArrowRight, LayoutDashboard, LogOut } from 'lucide-react';
 import { Cabin } from 'next/font/google';
 
 import { buttonVariants } from './ui/button';
@@ -13,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import Image from 'next/image';
 
 const cabin = Cabin({ subsets: ['latin'] });
 
@@ -32,7 +32,20 @@ const Navbar = async () => {
           )}
         >
           <div className='relative size-14'>
-            <Image src='/logo-dark.png' alt='logo' fill draggable={false} />
+            <Image
+              src='/logo-light.png'
+              className='block dark:hidden'
+              alt='logo'
+              fill
+              draggable={false}
+            />
+            <Image
+              src='/logo-dark.png'
+              className='hidden dark:block'
+              alt='logo'
+              fill
+              draggable={false}
+            />
           </div>
           FormAI
         </Link>
@@ -51,11 +64,6 @@ const Navbar = async () => {
                   <DropdownMenuItem asChild>
                     <Link href='/dashboard'>
                       <LayoutDashboard className='size-4 mr-3' /> My dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href='/settings'>
-                      <Settings className='size-4 mr-3' /> Settings
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
